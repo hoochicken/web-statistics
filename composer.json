@@ -1,0 +1,7 @@
+{
+    "name": "hoochicken/web-statistics",
+    "description": "build website statistics",
+    "require": {
+        "php": ">=8.1"
+    }
+}
