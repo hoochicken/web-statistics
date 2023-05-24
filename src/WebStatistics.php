@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoochicken;
+namespace Hoochicken\WebStatistics;
 class WebStatistics
 {
     public function __construct()
