@@ -3,5 +3,10 @@
     "description": "build website statistics",
     "require": {
         "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hoochicken\\WebStatistics\\WebStatistics\\": "src/"
+        }
     }
 }
