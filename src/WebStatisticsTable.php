@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Hoochicken\WebStatistics;
 
 use Hoochicken\Dbtable\Database;
@@ -36,11 +35,16 @@ class WebStatisticsTable extends Database
     public function __construct(string $host, string $database, string $user, string $password, int $port = self::PORT_DEFAULT)
     {
         parent::__construct($host, $database, $user, $password, $port);
-        $this->setTable(self::TABLE_NAME);
+        $this->setTable(static::TABLE_NAME);
     }
 
     public function createTableStatistics()
     {
-        $this->createTable(self::TABLE_NAME, $this->definition);
+        $this->createTable(static::getTable(), static::$definition);
+    }
+
+    public function add()
+    {
+        $this->addEntry();
     }
 }

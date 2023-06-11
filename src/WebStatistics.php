@@ -15,7 +15,17 @@ class WebStatistics
     public function initDb(string $host, string $database, string $user, string $password, int $port = self::PORT_DEFAULT)
     {
         $this->webstatTable = new WebStatisticsTable($host, $database, $user, $password, $port);
-        $this->webstatTable->setTable(self::TABLE_NAME);
+        $this->setTable(self::TABLE_NAME);
+    }
+
+    public function setTable(string $tablename)
+    {
+        $this->webstatTable->setTable($tablename);
+    }
+
+    public function getTable(): string
+    {
+        return $this->webstatTable->getTable();
     }
 
     public function getData(): array
@@ -30,7 +40,7 @@ class WebStatistics
 
     public function tableExists(): bool
     {
-        return $this->webstatTable->tableExists(WebStatisticsTable::TABLE_NAME);
+        return $this->webstatTable->tableExists($this->webstatTable->getTable());
     }
 
     public function setServer(ParameterBag $server)
@@ -59,22 +69,22 @@ class WebStatistics
 
     public function getBrowser(): string
     {
-        return static::$server->getString('HTTP_USER_AGENT');
+        return static::getServer()->getString('HTTP_USER_AGENT');
     }
 
     public function getPageUrl(): string
     {
-        return static::$server->getString('REQUEST_URI');
+        return static::getServer()->getString('REQUEST_URI');
     }
 
     public function getBrowserVersion(): string
     {
-        return static::$server->getString('HTTP_USER_AGENT');
+        return static::getServer()->getString('HTTP_USER_AGENT');
     }
 
     public function getCountry(): string
     {
-        return static::$server->getString('HTTP_ACCEPT_LANGUAGE');
+        return static::getServer()->getString('HTTP_ACCEPT_LANGUAGE');
     }
 
     public function getEntryTime(): string
