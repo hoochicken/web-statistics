@@ -44,11 +44,6 @@ class WebStatistics
         return static::$server;
     }
 
-    public function getVarFromSession($key)
-    {
-        return static::$server[$key] ?? '';
-    }
-
     public function addEntry()
     {
         $entry = [
