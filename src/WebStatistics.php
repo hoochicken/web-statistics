@@ -12,6 +12,11 @@ class WebStatistics
     private ?WebStatisticsTable $webstatTable;
     private static ?ParameterBag $server;
 
+    private static $dataToBeCollected = [
+        WebStatisticsTable::COLUMN_CREATED_AT,
+        WebStatisticsTable::COLUMN_PAGE_URL,
+    ];
+
     public function initDb(string $host, string $database, string $user, string $password, int $port = self::PORT_DEFAULT)
     {
         $this->webstatTable = new WebStatisticsTable($host, $database, $user, $password, $port);
@@ -64,7 +69,23 @@ class WebStatistics
             WebStatisticsTable::COLUMN_ENTRY_TIME => self::getEntryTime(),
             WebStatisticsTable::COLUMN_EXIT_TIME => self::getExitTime(),
         ];
+
+        $dataToBeCollected = static::getDataToBeCollected();
+        $entry = array_filter($entry, function($key) use ($dataToBeCollected) {
+            return in_array($key, $dataToBeCollected);
+        }, ARRAY_FILTER_USE_KEY);
+        // $entry = array_intersect_key($entry, array_flip(self::getDataToBeCollected()));
         $this->webstatTable->addEntry($entry);
+    }
+
+    public function setDataToBeCollected(array $value)
+    {
+        static::$dataToBeCollected = $value;
+    }
+
+    public function getDataToBeCollected(): array
+    {
+        return static::$dataToBeCollected;
     }
 
     public function getBrowser(): string
