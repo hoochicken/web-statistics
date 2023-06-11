@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Hoochicken\WebStatistics;
 
 use Hoochicken\ParameterBag\ParameterBag;

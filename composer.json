@@ -1,6 +1,10 @@
 {
     "name": "hoochicken/web-statistics",
+<<<<<<< HEAD
     "description": "datagrid",
+=======
+    "description": "build web statistics",
+>>>>>>> bf47ff1ea9d7e67815f9f477cfb695d83c294d70
     "license": "MIT",
     "authors": [
         {
