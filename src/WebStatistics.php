@@ -1,46 +1,95 @@
 <?php
 
-namespace Hoochicken;
+
+namespace Hoochicken\WebStatistics;
+
+use Hoochicken\ParameterBag\ParameterBag;
 
 class WebStatistics
 {
     const PORT_DEFAULT = 3306;
+    const TABLE_NAME = 'statistics';
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+    private ?WebStatisticsTable $webstatTable;
+    private static ?ParameterBag $server;
 
-    private string $host = '';
-    private int $port = self::PORT_DEFAULT;
-    private string $user = '';
-    private string $password = '';
-    private string $database = '';
-
-
-    public function __construct(string $host, string $user, string $password, string $database, int $port = self::PORT_DEFAULT)
+    public function initDb(string $host, string $database, string $user, string $password, int $port = self::PORT_DEFAULT)
     {
-        die('ASD');
+        $this->webstatTable = new WebStatisticsTable($host, $database, $user, $password, $port);
+        $this->webstatTable->setTable(self::TABLE_NAME);
     }
 
-    public function test()
+    public function getData(): array
     {
-        echo 'assssssssssssssssd';
+        return $this->webstatTable->getData();
     }
 
     public function createTable()
     {
-        $sql = 'CREATE TABLE `analytics` (
-  `id` int(20) NOT NULL,
-  `page_url` varchar(150) NOT NULL,
-  `entry_time` datetime NOT NULL,
-  `exit_time` datetime NOT NULL,
-  `ip_address` varchar(30) NOT NULL,
-  `country` varchar(50) NOT NULL,
-  `operating_system` varchar(20) NOT NULL,
-  `browser` varchar(20) NOT NULL,
-  `browser_version` varchar(20) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-)';
+        $this->webstatTable->createTableStatistics();
     }
 
-    public function tableExists()
+    public function tableExists(): bool
     {
-        return false;
+        return $this->webstatTable->tableExists(WebStatisticsTable::TABLE_NAME);
+    }
+
+    public function setServer(ParameterBag $server)
+    {
+        static::$server = $server;
+    }
+
+    public function getServer(): ParameterBag
+    {
+        return static::$server;
+    }
+
+    public function getVarFromSession($key)
+    {
+        return static::$server[$key] ?? '';
+    }
+
+    public function addEntry()
+    {
+        $entry = [
+            WebStatisticsTable::COLUMN_CREATED_AT => date(static::DATE_FORMAT),
+            WebStatisticsTable::COLUMN_PAGE_URL => self::getPageUrl(),
+            WebStatisticsTable::COLUMN_BROWSER => self::getBrowser(),
+            WebStatisticsTable::COLUMN_BROWSER_VERSION => self::getBrowserVersion(),
+            WebStatisticsTable::COLUMN_COUNTRY => self::getCountry(),
+            WebStatisticsTable::COLUMN_ENTRY_TIME => self::getEntryTime(),
+            WebStatisticsTable::COLUMN_EXIT_TIME => self::getExitTime(),
+        ];
+        $this->webstatTable->addEntry($entry);
+    }
+
+    public function getBrowser(): string
+    {
+        return static::$server->getString('HTTP_USER_AGENT');
+    }
+
+    public function getPageUrl(): string
+    {
+        return static::$server->getString('REQUEST_URI');
+    }
+
+    public function getBrowserVersion(): string
+    {
+        return static::$server->getString('HTTP_USER_AGENT');
+    }
+
+    public function getCountry(): string
+    {
+        return static::$server->getString('HTTP_ACCEPT_LANGUAGE');
+    }
+
+    public function getEntryTime(): string
+    {
+        return date(self::DATE_FORMAT);
+    }
+
+    public function getExitTime(): string
+    {
+        return date(self::DATE_FORMAT);
     }
 }
