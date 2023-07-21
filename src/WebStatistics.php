@@ -11,10 +11,12 @@ class WebStatistics
     const DATE_FORMAT = 'Y-m-d H:i:s';
     private ?WebStatisticsTable $webstatTable;
     private static ?ParameterBag $server;
+    private static string $sessionId;
 
     private static $dataToBeCollected = [
         WebStatisticsTable::COLUMN_CREATED_AT,
         WebStatisticsTable::COLUMN_PAGE_URL,
+        WebStatisticsTable::COLUMN_SESSION_ID,
     ];
 
     public function initDb(string $host, string $database, string $user, string $password, int $port = self::PORT_DEFAULT)
@@ -38,6 +40,13 @@ class WebStatistics
         return $this->webstatTable->getData();
     }
 
+    public function getDataGroupBySessionId(int $limit = 1000): array
+    {
+        $columns = $this->webstatTable->getDefinition();
+        $columns['COUNT(id) AS counter'] = '';
+        return $this->webstatTable->getDataGroupBy(array_keys($columns), WebStatisticsTable::COLUMN_SESSION_ID, $limit);
+    }
+
     public function createTable()
     {
         $this->webstatTable->createTableStatistics();
@@ -53,6 +62,11 @@ class WebStatistics
         static::$server = $server;
     }
 
+    public function setSessionId(string $sessionId)
+    {
+        static::$sessionId = $sessionId;
+    }
+
     public function getServer(): ParameterBag
     {
         return static::$server;
@@ -63,6 +77,7 @@ class WebStatistics
         $entry = [
             WebStatisticsTable::COLUMN_CREATED_AT => date(static::DATE_FORMAT),
             WebStatisticsTable::COLUMN_PAGE_URL => self::getPageUrl(),
+            WebStatisticsTable::COLUMN_SESSION_ID => self::getSessionId(),
             WebStatisticsTable::COLUMN_BROWSER => self::getBrowser(),
             WebStatisticsTable::COLUMN_BROWSER_VERSION => self::getBrowserVersion(),
             WebStatisticsTable::COLUMN_COUNTRY => self::getCountry(),
@@ -96,6 +111,11 @@ class WebStatistics
     public function getPageUrl(): string
     {
         return static::getServer()->getString('REQUEST_URI');
+    }
+
+    public function getSessionId(): string
+    {
+        return static::$sessionId;
     }
 
     public function getBrowserVersion(): string
