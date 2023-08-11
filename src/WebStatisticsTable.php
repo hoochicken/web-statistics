@@ -20,6 +20,8 @@ class WebStatisticsTable extends Database
     const COLUMN_BROWSER = 'browser';
     const COLUMN_BROWSER_VERSION = 'browser_version';
     const COLUMN_CREATED_AT = 'created_at';
+    const COLUMN_MAX_ID = 'max_id';
+    const COLUMN_MAX_CREATED_AT = 'max_created_at';
 
     protected static array $definition = [];
 

@@ -43,7 +43,9 @@ class WebStatistics
     public function getDataGroupBySessionId(int $limit = 1000): array
     {
         $columns = $this->webstatTable->getDefinition();
-        $columns['COUNT(id) AS counter'] = '';
+        $columns[sprintf('COUNT(%s) AS %s', WebStatisticsTable::COLUMN_ID, WebStatisticsTable::COLUMN_COUNTER)] = '';
+        $columns[sprintf('MAX(%s) AS %s', WebStatisticsTable::COLUMN_CREATED_AT, WebStatisticsTable::COLUMN_MAX_CREATED_AT)] = '';
+        $columns[sprintf('MAX(%s) AS %s', WebStatisticsTable::COLUMN_ID, WebStatisticsTable::COLUMN_MAX_ID)] = '';
         return $this->webstatTable->getDataGroupBy(array_keys($columns), WebStatisticsTable::COLUMN_SESSION_ID, $limit);
     }
 
