@@ -9,6 +9,8 @@ class WebStatisticsTable extends Database
 {
     const TABLE_NAME = 'statistics';
     const COLUMN_ID = 'id';
+    const COLUMN_TITLE = 'title';
+    const COLUMN_DESCRIPTION = 'description';
     const COLUMN_PAGE_URL = 'page_url';
     const COLUMN_SESSION_ID = 'session_id';
     const COLUMN_ENTRY_TIME = 'entry_time';
@@ -41,13 +43,15 @@ class WebStatisticsTable extends Database
     {
         static::$definition = [
             static::COLUMN_ID => sprintf('`%s` int(20) NOT NULL', static::COLUMN_ID),
+            static::COLUMN_TITLE => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_TITLE),
+            static::COLUMN_DESCRIPTION => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_DESCRIPTION),
             static::COLUMN_PAGE_URL => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_PAGE_URL),
             static::COLUMN_SESSION_ID => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_SESSION_ID),
             static::COLUMN_ENTRY_TIME => sprintf('`%s` datetime DEFAULT NULL', static::COLUMN_ENTRY_TIME),
             static::COLUMN_EXIT_TIME => sprintf('`%s` datetime DEFAULT NULL', static::COLUMN_EXIT_TIME),
             static::COLUMN_IP_ADDRESS => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_IP_ADDRESS),
-            static::COLUMN_COUNTRY => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_OPERATING_SYSTEM),
-            static::COLUMN_OPERATING_SYSTEM => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_BROWSER),
+            static::COLUMN_COUNTRY => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_COUNTRY),
+            static::COLUMN_OPERATING_SYSTEM => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_OPERATING_SYSTEM),
             static::COLUMN_BROWSER => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_BROWSER),
             static::COLUMN_BROWSER_VERSION => sprintf('`%s` varchar(255) DEFAULT NULL', static::COLUMN_BROWSER_VERSION),
             static::COLUMN_CREATED_AT => sprintf('`%s` timestamp DEFAULT NULL DEFAULT current_timestamp()', static::COLUMN_CREATED_AT),
@@ -59,8 +63,8 @@ class WebStatisticsTable extends Database
         return static::$definition;
     }
 
-    public function add()
+    public function add(string $title = '', string $description = '')
     {
-        $this->addEntry();
+        $this->addEntry($title, $description);
     }
 }

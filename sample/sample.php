@@ -3,12 +3,7 @@
 use Hoochicken\ParameterBag\ParameterBag;
 use Hoochicken\WebStatistics\WebStatistics;
 
-$autoload = ['../../../autoload.php', '../../dbtable/src/Database.php',  '../../parameter-bag/src/ParameterBag.php', '../src/WebStatistics.php', '../src/WebStatisticsTable.php'];
-foreach ($autoload as $filename) {
-    if (file_exists($filename)) {
-        require_once $filename;
-    }
-}
+require_once '../../../autoload.php';
 
 $host = 'localhost';
 $database = 'users';
@@ -24,6 +19,7 @@ $webstatistics->setTable($statisticsTable);
 if (!$webstatistics->tableExists()) {
     $webstatistics->createTable();
 }
+$webstatistics->setSessionId(session_id());
 $webstatistics->addEntry();
 
 print_r($webstatistics->getData());

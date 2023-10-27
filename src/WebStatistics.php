@@ -11,9 +11,11 @@ class WebStatistics
     const DATE_FORMAT = 'Y-m-d H:i:s';
     private ?WebStatisticsTable $webstatTable;
     private static ?ParameterBag $server;
-    private static string $sessionId;
+    private static string $sessionId = '';
 
     private static $dataToBeCollected = [
+        WebStatisticsTable::COLUMN_TITLE,
+        WebStatisticsTable::COLUMN_DESCRIPTION,
         WebStatisticsTable::COLUMN_CREATED_AT,
         WebStatisticsTable::COLUMN_PAGE_URL,
         WebStatisticsTable::COLUMN_SESSION_ID,
@@ -74,9 +76,11 @@ class WebStatistics
         return static::$server;
     }
 
-    public function addEntry()
+    public function addEntry(string $title = '', string $description = '')
     {
         $entry = [
+            WebStatisticsTable::COLUMN_TITLE => $title,
+            WebStatisticsTable::COLUMN_DESCRIPTION => $description,
             WebStatisticsTable::COLUMN_CREATED_AT => date(static::DATE_FORMAT),
             WebStatisticsTable::COLUMN_PAGE_URL => self::getPageUrl(),
             WebStatisticsTable::COLUMN_SESSION_ID => self::getSessionId(),
